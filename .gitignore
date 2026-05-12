@@ -1,0 +1,15 @@
+node_modules
+.next
+out
+dist
+.env
+.env.local
+.env*.local
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+_extracted
+
+# Local-only Claude Code harness settings — not portable across machines.
+.claude/settings.local.json
