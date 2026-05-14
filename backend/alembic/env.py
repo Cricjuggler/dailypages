@@ -13,6 +13,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.config import get_settings
+from app.db import normalize_db_url
 from app.models import Base  # noqa: F401 — ensures all models are registered
 
 # Alembic Config — used to load .ini values
@@ -22,7 +23,9 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 settings = get_settings()
-config.set_main_option("sqlalchemy.url", settings.database_url)
+# Normalize libpq query params (sslmode → ssl, drop channel_binding) so the
+# raw connection string from Neon/Supabase works without hand-editing.
+config.set_main_option("sqlalchemy.url", normalize_db_url(settings.database_url))
 
 target_metadata = Base.metadata
 
