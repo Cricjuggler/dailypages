@@ -1,10 +1,11 @@
-# Render Blueprint — deploy a Dockerized FastAPI service.
-# Connect this repo to Render and pick "Blueprint" to apply.
+# Render Blueprint — single-container deploy (API + Celery worker via start.sh).
+# Connect this repo to Render and pick "Blueprint" to apply, or set up manually
+# via "New → Web Service".
 services:
   - type: web
     name: dailypages-api
     runtime: docker
-    plan: starter
+    plan: free
     rootDir: backend
     dockerfilePath: ./Dockerfile
     healthCheckPath: /healthz
@@ -13,11 +14,20 @@ services:
         value: production
       - key: LOG_LEVEL
         value: INFO
+      - key: R2_BUCKET
+        value: dailypages-uploads
+      # Secrets — paste these in the Render dashboard after creation.
       - key: DATABASE_URL
-        sync: false        # paste your Neon URL in the Render dashboard
+        sync: false
+      - key: CELERY_BROKER_URL
+        sync: false
+      - key: CELERY_RESULT_BACKEND
+        sync: false
       - key: CLERK_ISSUER
         sync: false
       - key: CLERK_JWKS_URL
+        sync: false
+      - key: CLERK_SECRET_KEY
         sync: false
       - key: CLERK_AUDIENCE
         sync: false
@@ -27,7 +37,9 @@ services:
         sync: false
       - key: R2_SECRET_ACCESS_KEY
         sync: false
-      - key: R2_BUCKET
-        value: dailypages-uploads
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: VOYAGE_API_KEY
+        sync: false
       - key: CORS_ORIGINS
         sync: false
