@@ -42,6 +42,18 @@ async function serverFetch<T>(
   return (await res.json()) as T;
 }
 
+export interface MyStatsApi {
+  current_streak: number;
+  best_streak: number;
+  books_finished: number;
+  minutes_this_week: number;
+  minutes_goal_week: number;
+  avg_session: number;
+  completed_sessions: number;
+  weekly: { day: string; min: number }[];
+  days_heatmap: { date: string; state: "miss" | "light" | "read" | "today" }[];
+}
+
 export const serverApi = {
   listBooks: () => serverFetch<BookApi[]>("/books"),
   getBook: (id: string) => serverFetch<BookApi>(`/books/${id}`),
@@ -49,4 +61,5 @@ export const serverApi = {
     serverFetch<PlanApi[]>(`/plans?book_id=${bookId}`),
   getPlan: (id: string) => serverFetch<PlanWithSessionsApi>(`/plans/${id}`),
   getSession: (id: string) => serverFetch<SessionApi>(`/sessions/${id}`),
+  myStats: () => serverFetch<MyStatsApi>("/auth/me/stats"),
 };
